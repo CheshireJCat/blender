@@ -18,14 +18,36 @@ An installable [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harnes
 
 No Blender add-on or control port is required: each operation launches a local Blender background process.
 
-## Install
+## Requirements
+
+- DeepSeek Harness `0.1.0-rc.6`
+- Node.js 20+
+- Blender 4.3+ available as `blender` on `PATH`, or configured with an absolute path
+- Python 3.10+ for the optional reference-analysis helpers
+
+## Install from npm
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web add dsh-blender
+npx @deepseek-ai/dsh plugin --profile web exec dsh-blender-setup
+npx @deepseek-ai/dsh --profile web --dump-config
+npx @deepseek-ai/dsh web
+```
+
+The setup command creates a private `.venv` inside the installed package and installs OpenCV, NumPy, Pillow, and SciPy. Skip it only if you do not need reference, wireframe, multiview, texture, or animation-analysis helpers.
+
+To install a pinned GitHub release instead:
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.0
+```
+
+## Develop from source
 
 ```bash
 pnpm install
 pnpm setup:analysis
 npx @deepseek-ai/dsh plugin --profile web add .
-npx @deepseek-ai/dsh --profile web --dump-config
-npx @deepseek-ai/dsh web
 ```
 
 Open [http://127.0.0.1:3080](http://127.0.0.1:3080), create a session whose workspace is the modeling directory, and ask dsh to use `create-3d-model`.

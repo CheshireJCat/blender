@@ -17,6 +17,9 @@ const required = [
   'scripts/setup-analysis.js',
   'lib/helper-catalog.js',
   'requirements-analysis.txt',
+  'README.md',
+  'README.zh-CN.md',
+  'CHANGELOG.md',
   'skills/create-3d-model/SKILL.md',
   'skills/create-3d-model/references/dsh-integration.md',
   'skills/create-3d-model/references/capability-map.md',
@@ -30,6 +33,9 @@ const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 assert.equal(manifest.name, 'dsh-blender')
 assert.equal(manifest.dsh.bundle.patch, './cordis.patch.yml')
 assert.equal(manifest.type, 'module')
+assert.equal(manifest.repository.url, 'git+https://github.com/CheshireJCat/blender.git')
+assert.equal(manifest.bin['dsh-blender-setup'], './scripts/setup-analysis.js')
+assert.equal(manifest.publishConfig.access, 'public')
 
 const skill = readFileSync(join(root, 'skills/create-3d-model/SKILL.md'), 'utf8')
 assert.match(skill, /^---\nname: create-3d-model\n/u)

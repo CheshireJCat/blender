@@ -34,7 +34,24 @@ pnpm setup:analysis
 
 它只会在插件目录创建被 Git 忽略的 `.venv`，并安装 OpenCV、NumPy、Pillow 和 SciPy。也可以把 `analysisPythonExecutable` 指向已有环境。
 
-## 安装到本地 dsh Web profile
+## 从 npm 安装
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web add dsh-blender
+npx @deepseek-ai/dsh plugin --profile web exec dsh-blender-setup
+npx @deepseek-ai/dsh --profile web --dump-config
+npx @deepseek-ai/dsh web
+```
+
+`dsh-blender-setup` 会在已安装的插件目录创建私有 `.venv`，并安装 OpenCV、NumPy、Pillow 和 SciPy。只有在完全不需要参考图、线框、多视图、贴图或动画分析 Helper 时才建议跳过。
+
+也可以固定安装 GitHub Release：
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.0
+```
+
+## 从源码开发
 
 在本仓库根目录执行：
 

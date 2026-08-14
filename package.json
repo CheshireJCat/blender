@@ -2,8 +2,19 @@
   "name": "dsh-blender",
   "version": "0.2.0",
   "description": "Full DeepSeek Harness Blender production, reconstruction, validation, and export plugin",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CheshireJCat/blender.git"
+  },
+  "homepage": "https://github.com/CheshireJCat/blender#readme",
+  "bugs": {
+    "url": "https://github.com/CheshireJCat/blender/issues"
+  },
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "dsh-blender-setup": "./scripts/setup-analysis.js"
+  },
   "exports": {
     ".": "./index.js"
   },
@@ -17,7 +28,8 @@
     "LICENSE",
     "NOTICE",
     "README.md",
-    "README.zh-CN.md"
+    "README.zh-CN.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "prepack": "node scripts/clean-package.js",
@@ -45,6 +57,9 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT"
 }

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
