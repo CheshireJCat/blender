@@ -13,7 +13,7 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "dsh-blender-setup": "./scripts/setup-analysis.js"
+    "dsh-blender-setup": "scripts/setup-analysis.js"
   },
   "exports": {
     ".": "./index.js"
