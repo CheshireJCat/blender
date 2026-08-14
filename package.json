@@ -1,7 +1,7 @@
 {
   "name": "dsh-blender",
-  "version": "0.2.0",
-  "description": "Full DeepSeek Harness Blender production, reconstruction, validation, and export plugin",
+  "version": "0.2.1",
+  "description": "DeepSeek Harness Blender production, reconstruction, validation, and export plugin",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CheshireJCat/blender.git"
@@ -51,9 +51,21 @@
       "patch": "./cordis.patch.yml"
     }
   },
-  "dependencies": {
-    "@deepseek-ai/dsh-tools": "0.1.0-rc.6",
+  "peerDependencies": {
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
     "@deepseek-ai/schemastery": "^3.18.1"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-tools": {
+      "optional": true
+    },
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-tools": "0.1.0-rc.6",
+    "@deepseek-ai/schemastery": "3.18.1"
   },
   "engines": {
     "node": ">=20"

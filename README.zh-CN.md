@@ -48,7 +48,7 @@ npx @deepseek-ai/dsh web
 也可以固定安装 GitHub Release：
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.0
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.1
 ```
 
 ## 从源码开发

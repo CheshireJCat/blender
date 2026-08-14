@@ -7,12 +7,12 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@deepseek-ai/dsh-tools':
         specifier: 0.1.0-rc.6
         version: 0.1.0-rc.6(f8724372086ccc1457fc84e7becee2e0)
       '@deepseek-ai/schemastery':
-        specifier: ^3.18.1
+        specifier: 3.18.1
         version: 3.18.1
 
 packages:
