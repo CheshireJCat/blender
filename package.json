@@ -1,7 +1,7 @@
 {
   "name": "dsh-blender",
-  "version": "0.1.0",
-  "description": "DeepSeek Harness plugin for safe, workspace-scoped Blender 3D modeling",
+  "version": "0.2.0",
+  "description": "Full DeepSeek Harness Blender production, reconstruction, validation, and export plugin",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -10,16 +10,21 @@
   "files": [
     "index.js",
     "cordis.patch.yml",
+    "lib",
     "scripts",
     "skills",
+    "requirements-analysis.txt",
     "LICENSE",
     "NOTICE",
     "README.md",
     "README.zh-CN.md"
   ],
   "scripts": {
+    "prepack": "node scripts/clean-package.js",
+    "setup:analysis": "node scripts/setup-analysis.js",
     "test": "node --test",
     "test:blender": "RUN_BLENDER_TESTS=1 node --test test/blender.integration.test.js",
+    "test:helpers": "RUN_HELPER_TESTS=1 node --test test/helpers.integration.test.js",
     "validate": "node scripts/validate-package.js"
   },
   "keywords": [

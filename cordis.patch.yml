@@ -3,8 +3,13 @@
       name: dsh-blender
       config:
         blenderExecutable: blender
+        analysisPythonExecutable: ''
         timeoutMs: 180000
+        helperTimeoutMs: 120000
         maxOutputChars: 20000
         restrictToWorkspace: true
         enablePython: true
+        enableHelpers: true
+        enableMaintenanceHelpers: false
         registerSkill: true
+        registerModuleSkills: true
