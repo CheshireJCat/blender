@@ -24,11 +24,16 @@ integrationTest('creates, inspects, renders, and exports a Blender scene', { tim
   }
   const config = {
     blenderExecutable: process.env.BLENDER_BIN ?? 'blender',
+    analysisPythonExecutable: '',
     timeoutMs: 120000,
+    helperTimeoutMs: 120000,
     maxOutputChars: 20000,
     restrictToWorkspace: true,
     enablePython: true,
+    enableHelpers: true,
+    enableMaintenanceHelpers: false,
     registerSkill: true,
+    registerModuleSkills: true,
   }
   const tools = new Map(internals.createTools(config).map((tool) => [tool.name, tool]))
 
@@ -81,6 +86,29 @@ dsh_result = {'created': ['GEO-TestCube', 'CAM-Test', 'LGT-Key'], 'negative_zero
   }, exec)
   assert.equal(inspected.scene.objects.some((object) => object.name === 'GEO-TestCube'), true)
 
+  const objectInfo = await tools.get('blender_object_info').execute({
+    blend_path: 'artifacts/cube-v001.blend',
+    object_names: ['GEO-TestCube'],
+  }, exec)
+  assert.equal(objectInfo.objects[0].name, 'GEO-TestCube')
+  assert.deepEqual(objectInfo.missing, [])
+
+  const validation = await tools.get('blender_validate_scene').execute({
+    blend_path: 'artifacts/cube-v001.blend',
+    profile: 'web',
+  }, exec)
+  assert.equal(validation.passed, true)
+
+  const preview = await tools.get('blender_preview').execute({
+    blend_path: 'artifacts/cube-v001.blend',
+    output_path: 'artifacts/cube-isometric.png',
+    view: 'isometric',
+    width: 320,
+    height: 320,
+    samples: 8,
+  }, exec)
+  assert.ok(preview.bytes > 0)
+
   const rendered = await tools.get('blender_render').execute({
     blend_path: 'artifacts/cube-v001.blend',
     output_path: 'artifacts/cube-preview.png',
@@ -91,6 +119,24 @@ dsh_result = {'created': ['GEO-TestCube', 'CAM-Test', 'LGT-Key'], 'negative_zero
   assert.ok(rendered.bytes > 0)
   assert.equal((await stat(rendered.imagePath)).isFile(), true)
 
+  const frames = await tools.get('blender_render_frames').execute({
+    blend_path: 'artifacts/cube-v001.blend',
+    output_dir: 'artifacts/frames',
+    frames: [1, 2],
+    width: 160,
+    height: 160,
+    samples: 4,
+  }, exec)
+  assert.equal(frames.imagePaths.length, 2)
+  assert.ok(frames.bytes > 0)
+
+  const coverage = await tools.get('blender_helper_run').execute({
+    helper: 'surface-texture-coverage-audit',
+    blend_path: 'artifacts/cube-v001.blend',
+    arguments: { objects: ['GEO-TestCube'], out: 'artifacts/surface-coverage.json' },
+  }, exec)
+  assert.equal(coverage.report.summary.objects, 1)
+
   const exported = await tools.get('blender_export').execute({
     blend_path: 'artifacts/cube-v001.blend',
     output_path: 'artifacts/cube.glb',
@@ -98,4 +144,18 @@ dsh_result = {'created': ['GEO-TestCube', 'CAM-Test', 'LGT-Key'], 'negative_zero
   assert.ok(exported.bytes > 0)
   assert.equal(exported.format, 'glb')
   assert.equal((await stat(exported.modelPath)).isFile(), true)
+
+  const exportValidation = await tools.get('blender_validate_export').execute({
+    model_path: 'artifacts/cube.glb',
+    profile: 'web',
+  }, exec)
+  assert.equal(exportValidation.validation.passed, true)
+  assert.equal(exportValidation.importedObjects.includes('GEO-TestCube'), true)
+
+  const imported = await tools.get('blender_import').execute({
+    source_path: 'artifacts/cube.glb',
+    save_path: 'artifacts/cube-reimported.blend',
+  }, exec)
+  assert.ok(imported.bytes > 0)
+  assert.equal(imported.importedObjects.includes('GEO-TestCube'), true)
 })

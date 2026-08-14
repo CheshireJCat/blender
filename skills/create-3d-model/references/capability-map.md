@@ -11,13 +11,7 @@
 
 ## Loading rule
 
-Read a module with dsh's file-reading capability at:
-
-```text
-references/modules/<module-name>/SKILL.md
-```
-
-Resolve `references/...` and `scripts/...` links inside a module from that module's directory. When a module says to load or chain-load another skill, read that other module's `SKILL.md`; do not expect 29 additional top-level dsh skills to be registered.
+Load a module through DSH's `skill` tool using the module name in the tables below. All 29 modules are registered as model-invocable bundled skills. Resolve each module's `references/...` resources from the resource directory reported by the loader. Run deterministic scripts through `blender_helper_catalog` and `blender_helper_run` instead of guessing package paths.
 
 ## Orchestration and production
 

@@ -8,14 +8,14 @@
 - Commit date: `2026-05-01`
 - License: MIT; see `../UPSTREAM_LICENSE` from the skill root.
 
-The upstream release contains 30 chain-loadable Claude Code skills led by `text-to-blender`. The intermediate Codex adaptation exposed the output-oriented `create-3d-model` orchestrator. This DeepSeek Harness adaptation keeps that orchestrator and retains the other 29 skills as English reference modules, all 26 Python helpers, and the three orchestrator references for assembly order, Blender version compatibility, and common object dimensions.
+The upstream release contains 30 chain-loadable Claude Code skills led by `text-to-blender`. The intermediate Codex adaptation exposed the output-oriented `create-3d-model` orchestrator. This DeepSeek Harness adaptation registers that orchestrator and all 29 domain modules as independently loadable runtime skills, and exposes all 26 Python/Blender helpers through a workspace-scoped catalog and runner.
 
 Validation render assets, trigger-eval datasets, development journals, changelogs, and repository-only documentation were not copied because they do not provide runtime capability. Module recipes, domain references, and executable helpers were retained.
 
 ## DeepSeek Harness adaptations
 
-- Replace Claude/Codex-specific tool assumptions and the external BlenderMCP transport with the packaged `blender_status`, `blender_scene_info`, `blender_python`, `blender_render`, and `blender_export` tools.
-- Replace top-level multi-skill registration with one skill plus on-demand module reads.
+- Replace Claude/Codex-specific tool assumptions and the external BlenderMCP transport with 13 packaged tools for status, scene/object inspection, import, Python modeling, preview, still/frame rendering, export, scene/export validation, and helper discovery/execution.
+- Register the complete 30-skill stack while preserving progressive loading and module-local resources.
 - Rename the entry point around the normal deliverable rather than one input modality or the Blender implementation detail; support text, image, wireframe, multiview, texture/template, and existing-asset inputs.
 - Treat a portable 3D model as the default primary artifact and `.blend` as its editable engineering source.
 - Add explicit existing-scene protections, workspace-scoped paths, overwrite denial, versioned saves, durable artifacts, and `read_image` visual-evidence gates.
@@ -28,6 +28,7 @@ Validation render assets, trigger-eval datasets, development journals, changelog
 - Runtime: Blender command-line executable (`blender` by default).
 - Role: local background production backend launched by the `dsh-blender` plugin.
 - Transport: one fresh Blender process per tool call, with temporary JSON payload/result files removed after completion.
+- Analysis runtime: a configured Python environment containing OpenCV, NumPy, Pillow, and SciPy for reference/validation helpers. The package-local `.venv` can be prepared with `pnpm setup:analysis`.
 
 No Blender add-on or control port is required. Configure `blenderExecutable` in the bundle patch when Blender is not on `PATH`.
 

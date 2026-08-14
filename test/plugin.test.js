@@ -8,14 +8,19 @@ import { apply, internals } from '../index.js'
 
 const config = {
   blenderExecutable: 'blender',
+  analysisPythonExecutable: '',
   timeoutMs: 180000,
+  helperTimeoutMs: 120000,
   maxOutputChars: 20000,
   restrictToWorkspace: true,
   enablePython: true,
+  enableHelpers: true,
+  enableMaintenanceHelpers: false,
   registerSkill: true,
+  registerModuleSkills: true,
 }
 
-test('registers the bundled skill and five Blender tools', () => {
+test('registers the complete skill stack and Blender production tools', () => {
   const tools = []
   const skills = []
   apply({
@@ -26,15 +31,25 @@ test('registers the bundled skill and five Blender tools', () => {
   assert.deepEqual(tools.map((tool) => tool.name), [
     'blender_status',
     'blender_scene_info',
+    'blender_object_info',
+    'blender_import',
     'blender_python',
+    'blender_preview',
     'blender_render',
+    'blender_render_frames',
     'blender_export',
+    'blender_validate_scene',
+    'blender_validate_export',
+    'blender_helper_catalog',
+    'blender_helper_run',
   ])
-  assert.equal(skills.length, 1)
+  assert.equal(skills.length, 30)
   assert.equal(skills[0].name, 'create-3d-model')
   assert.equal(skills[0].provider, 'dsh-blender')
   assert.match(skills[0].content, /blender_status/u)
   assert.equal(skills[0].resourceBase.kind, 'directory')
+  assert.equal(skills.some((skill) => skill.name === 'wireframe-to-3d'), true)
+  assert.equal(skills.some((skill) => skill.name === 'blender-animation'), true)
 })
 
 test('can disable the arbitrary Blender Python tool and bundled skill', () => {
@@ -47,6 +62,19 @@ test('can disable the arbitrary Blender Python tool and bundled skill', () => {
 
   assert.equal(tools.some((tool) => tool.name === 'blender_python'), false)
   assert.equal(skills.length, 0)
+})
+
+test('can expose only the top-level skill and disable helper tools', () => {
+  const tools = []
+  const skills = []
+  apply({
+    tools: { register(tool) { tools.push(tool) } },
+    skills: { register(skill) { skills.push(skill) } },
+  }, { ...config, enableHelpers: false, registerModuleSkills: false })
+
+  assert.equal(skills.length, 1)
+  assert.equal(tools.some((tool) => tool.name === 'blender_helper_run'), false)
+  assert.equal(tools.some((tool) => tool.name === 'blender_validate_export'), true)
 })
 
 test('workspace path guard accepts local paths and rejects traversal', async () => {

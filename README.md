@@ -2,22 +2,27 @@
 
 [简体中文](README.zh-CN.md)
 
-An installable [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugin that gives dsh a real Blender-backed 3D modeling workflow. It adapts the `create-3d-model-skill` orchestration, 29 on-demand domain modules, and 26 analysis/validation helpers, then adds workspace-scoped Blender tools for inspection, Python modeling, rendering, and export.
+An installable [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) plugin that gives dsh a complete Blender-backed 3D production workflow. It registers one orchestrator plus 29 directly loadable domain skills, all 26 upstream analysis/validation helpers, and 13 workspace-scoped Blender tools.
 
 ## Tools
 
-- `blender_status` checks Blender and the active dsh workspace.
-- `blender_scene_info` inspects an existing `.blend` without mutating it.
+- `blender_status` checks Blender, analysis Python, skills, helpers, and the active workspace.
+- `blender_scene_info` and `blender_object_info` inspect scenes and object-level geometry, materials, UVs, constraints, shape keys, and animation.
+- `blender_import` converts supported portable assets into versioned `.blend` sources.
 - `blender_python` runs a small reviewed `bpy`/`bmesh` chunk and saves a versioned `.blend`.
-- `blender_render` creates PNG/JPEG evidence for `read_image` visual QA.
+- `blender_preview`, `blender_render`, and `blender_render_frames` create blockout, look-dev, and animation evidence for `read_image` QA.
 - `blender_export` exports GLB/glTF, FBX, OBJ, STL, USD, or PLY.
-- The bundled `create-3d-model` Skill coordinates blockout, refinement, materials, lighting, cameras, animation, validation, and artifact handoff.
+- `blender_validate_scene` and `blender_validate_export` perform target-aware audits and clean-process re-import checks.
+- `blender_helper_catalog` and `blender_helper_run` expose all 26 deterministic reference, wireframe, contour, multiview, UV, texture, look, repair, and animation-QA helpers.
+- The bundled 30-skill stack coordinates blockout, refinement, materials, lighting, cameras, animation, reconstruction, validation, and artifact handoff.
 
 No Blender add-on or control port is required: each operation launches a local Blender background process.
 
 ## Install
 
 ```bash
+pnpm install
+pnpm setup:analysis
 npx @deepseek-ai/dsh plugin --profile web add .
 npx @deepseek-ai/dsh --profile web --dump-config
 npx @deepseek-ai/dsh web

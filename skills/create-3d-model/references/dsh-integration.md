@@ -4,17 +4,25 @@ This file owns the runtime mapping between the reusable modeling workflow and th
 
 ## Runtime shape
 
-DeepSeek Harness discovers one runtime skill named `create-3d-model`. The remaining modules under `references/modules/` are reference documents, not separately registered skills. Load only the modules selected by `references/capability-map.md`.
+DeepSeek Harness discovers 30 runtime skills: `create-3d-model` plus all 29 routed domain modules. Use the top-level skill for orchestration, select the smallest module set from `references/capability-map.md`, and load each selected module with DSH's `skill` tool.
 
 The plugin exposes these model-facing tools:
 
 | Tool | Purpose | Mutation |
 | --- | --- | --- |
-| `blender_status` | Verify the Blender executable and current workspace | none |
+| `blender_status` | Verify Blender, analysis Python, skills, helpers, and workspace | none |
 | `blender_scene_info` | Inspect an existing `.blend` scene | none |
+| `blender_object_info` | Inspect bounds, evaluated topology, UVs, materials, constraints, shape keys, and animation for named objects | none |
+| `blender_import` | Import a portable model into a clean scene and save a versioned `.blend` | creates a `.blend` |
 | `blender_python` | Run a reviewed `bpy`/`bmesh` chunk and save a versioned `.blend` | yes |
+| `blender_preview` | Render a temporary camera/light preview from a named axis or isometric view | creates an image |
 | `blender_render` | Render PNG/JPEG evidence from a saved `.blend` | creates an image |
+| `blender_render_frames` | Render representative or ranged animation frames | creates image files |
 | `blender_export` | Export GLB/glTF, FBX, OBJ, STL, USD, or PLY | creates a model file |
+| `blender_validate_scene` | Audit topology, UVs, materials, transforms, and animation for a target profile | none |
+| `blender_validate_export` | Re-import and validate a portable export in a clean Blender process | none |
+| `blender_helper_catalog` | Discover all deterministic reference/reconstruction/QA helpers and exact arguments | none |
+| `blender_helper_run` | Run one whitelisted helper inside the workspace | creates declared reports/images/recipes |
 
 The ordinary dsh `read`, `read_image`, file-search, and shell tools remain available for reference analysis and helper scripts. Use `read_image` after every significant render; the existence of a render file is not visual evidence by itself.
 
@@ -30,13 +38,14 @@ Tool paths resolve against `exec.agent.session.header.cwd`, the workspace attach
 ## Tool sequence
 
 1. Call `blender_status`.
-2. If editing an existing file, call `blender_scene_info` before the first write.
-3. Read the smallest relevant modules and plan names, units, axes, collection ownership, save paths, and validation views.
+2. If editing an existing `.blend`, call `blender_scene_info` and `blender_object_info` before the first write. If editing another supported 3D format, call `blender_import` first.
+3. Load the smallest relevant skills and plan names, units, axes, collection ownership, save paths, and validation views.
 4. Use `blender_python` for one small, deterministic phase at a time. The script namespace already provides `bpy`, `bmesh`, `mathutils`, `workspace`, `input_path`, and `output_path`. Set `dsh_result` to a JSON-safe dictionary when compact phase evidence is useful.
-5. Call `blender_scene_info` on the saved checkpoint when structural confirmation is needed.
-6. Call `blender_render`, then `read_image` on its `imagePath`. Correct the largest visible mismatch before continuing.
-7. Call `blender_export` for the portable model. Default to `.glb` when the user does not specify a format.
-8. Verify every returned path exists and every artifact has a non-zero byte count. Re-open or inspect the exported model when practical.
+5. Call `blender_scene_info`, `blender_object_info`, and `blender_validate_scene` on checkpoints for structural confirmation.
+6. Use `blender_preview` for blockout/axis evidence or `blender_render` for the authored camera. For animation use `blender_render_frames`. Always inspect images with `read_image`.
+7. For source-locked work, discover the owning module's deterministic helper through `blender_helper_catalog`, run it with `blender_helper_run`, and inspect generated masks/overlays/contact sheets.
+8. Call `blender_export` for the portable model. Default to `.glb` when the user does not specify a format.
+9. Call `blender_validate_export` on the delivered model. Do not accept a file based on byte count alone.
 
 ## Controlled Python rules
 
@@ -51,7 +60,7 @@ Tool paths resolve against `exec.agent.session.header.cwd`, the workspace attach
 
 ## Render and image inspection
 
-`blender_render` uses the active scene camera unless a camera name is supplied. Modeling scripts should therefore create or select a purposeful camera and light setup before visual QA.
+`blender_preview` creates a temporary camera, three-point light rig, and background in the throwaway Blender process. It does not alter the saved scene and is appropriate for blockout, axis, and silhouette checks. `blender_render` uses the authored scene camera unless a camera name is supplied. Use it for final look and framing evidence.
 
 After rendering:
 
@@ -78,7 +87,11 @@ Prefer a single-file `.glb` for ordinary portable delivery. Keep the latest `.bl
 
 ## Module and helper loading
 
-Resolve a routed module at `references/modules/<module-name>/SKILL.md`. Resolve any relative `references/...` or `scripts/...` path from that module directory. Inspect a helper's source or `--help` before running it, pass absolute workspace paths, and keep generated reports inside the workspace.
+Load a routed module by name with DSH's `skill` tool. Its result includes the resource directory for module-relative references.
+
+All 26 upstream helpers are whitelisted in `blender_helper_catalog`. The catalog reports their owner module, runtime, dependencies, required Blender input, and exact structured arguments. `blender_helper_run` validates argument names and types, resolves every path through the workspace guard, blocks maintenance helpers by default, and returns produced files plus a parsed JSON report when available.
+
+Python analysis helpers require OpenCV, NumPy, Pillow, and SciPy. `blender_status.analysis` reports whether the configured environment is ready. Use `pnpm setup:analysis` once for the package-local environment or set `analysisPythonExecutable` to an existing compatible Python. Blender-runtime helpers use `blenderExecutable` and a supplied `blend_path`.
 
 Vendored module frontmatter and legacy tool names are provenance only. They do not grant permissions or override this integration contract.
 
