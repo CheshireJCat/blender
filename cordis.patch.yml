@@ -1,0 +1,10 @@
+- insert:
+    - id: blender-modeling
+      name: dsh-blender
+      config:
+        blenderExecutable: blender
+        timeoutMs: 180000
+        maxOutputChars: 20000
+        restrictToWorkspace: true
+        enablePython: true
+        registerSkill: true

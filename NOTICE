@@ -1,0 +1,12 @@
+dsh-blender includes an adapted copy of the create-3d-model Agent Skill from:
+
+  /Users/nekos/git/create-3d-model-skill
+  Upstream project: https://github.com/CheshireJCat/blender-modeling-skill
+  License: MIT
+
+That skill in turn preserves and adapts modules from RobLe3/cc-blender-skill.
+The original upstream notices and licenses are retained under
+skills/create-3d-model/.
+
+DeepSeek Harness is a separate project by DeepSeek AI and is licensed under MIT.
+This plugin is not an official DeepSeek AI or Blender Foundation product.
