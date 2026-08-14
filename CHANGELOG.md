@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.2.1 - 2026-08-14
+
+- Declare DeepSeek Harness runtime packages as peer dependencies so profile installs reuse the host runtime without duplicate dependency trees or peer warnings.
+- Normalize the published `dsh-blender-setup` binary path and polish public package metadata.
+
 ## 0.2.0 - 2026-08-14
 
 - Register the complete 30-skill Blender capability stack in DeepSeek Harness.
