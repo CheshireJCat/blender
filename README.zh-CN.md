@@ -2,7 +2,15 @@
 
 [English](README.md)
 
+[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)
+
 一个可安装到 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的完整 Blender 3D 生产插件。它以 `create-3d-model-skill` 为蓝本，注册 1 个总编排 Skill、29 个可直接加载的领域 Skill、26 个受控分析/验证 Helper，以及 13 个可实际执行的 Blender 工具。
+
+## 示例输出
+
+![dsh-blender 生成的无相机台灯预览](assets/dsh-blender-lamp-preview.png)
+
+这张无相机预览来自一次真实的 `dsh-blender` 安装冒烟测试。
 
 ## 提供的能力
 
