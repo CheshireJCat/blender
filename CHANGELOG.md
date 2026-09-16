@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.2.2 - 2026-09-16
+
+- Clean up temporary directories and partially written payloads when Blender call preparation fails, including JSON serialization and file write errors (#7, #8).
+- Add regression coverage for payload serialization and partial-write failures.
+
 ## 0.2.1 - 2026-08-14
 
 - Declare DeepSeek Harness runtime packages as peer dependencies so profile installs reuse the host runtime without duplicate dependency trees or peer warnings.
