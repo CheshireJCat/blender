@@ -484,23 +484,23 @@ function runProcess(command, args, { signal, timeoutMs, maxOutputChars }) {
 
 async function runBlender(config, exec, operation, payload, inputBlend) {
   const tempDir = await mkdtemp(join(tmpdir(), 'dsh-blender-'))
-  const payloadPath = join(tempDir, 'payload.json')
-  const resultPath = join(tempDir, 'result.json')
-  await writeFile(payloadPath, JSON.stringify(payload), 'utf8')
-  const args = inputBlend === undefined
-    ? ['--background', '--factory-startup']
-    : [inputBlend, '--background']
-  args.push(
-    '--disable-autoexec',
-    '--python-exit-code', '1',
-    '--python', DRIVER_PATH,
-    '--',
-    '--operation', operation,
-    '--payload', payloadPath,
-    '--result', resultPath,
-  )
-
   try {
+    const payloadPath = join(tempDir, 'payload.json')
+    const resultPath = join(tempDir, 'result.json')
+    await writeFile(payloadPath, JSON.stringify(payload), 'utf8')
+    const args = inputBlend === undefined
+      ? ['--background', '--factory-startup']
+      : [inputBlend, '--background']
+    args.push(
+      '--disable-autoexec',
+      '--python-exit-code', '1',
+      '--python', DRIVER_PATH,
+      '--',
+      '--operation', operation,
+      '--payload', payloadPath,
+      '--result', resultPath,
+    )
+
     const processResult = await runProcess(config.blenderExecutable, args, {
       signal: exec?.signal,
       timeoutMs: config.timeoutMs,
