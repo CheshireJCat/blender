@@ -20,6 +20,7 @@ const required = [
   'README.md',
   'README.zh-CN.md',
   'CHANGELOG.md',
+  'docs/compatibility-v0.2.3.md',
   'skills/create-3d-model/SKILL.md',
   'skills/create-3d-model/references/dsh-integration.md',
   'skills/create-3d-model/references/capability-map.md',
@@ -36,7 +37,7 @@ assert.equal(manifest.type, 'module')
 assert.equal(manifest.repository.url, 'git+https://github.com/CheshireJCat/blender.git')
 assert.equal(manifest.bin['dsh-blender-setup'], 'scripts/setup-analysis.js')
 assert.equal(manifest.publishConfig.access, 'public')
-assert.equal(manifest.peerDependencies['@deepseek-ai/dsh-tools'], '^0.1.0-rc.6')
+assert.equal(manifest.peerDependencies['@deepseek-ai/dsh-tools'], '^0.1.0-rc.6 || ^0.2.0-rc.2 || ^0.2.1-alpha.1')
 assert.equal(manifest.peerDependenciesMeta['@deepseek-ai/dsh-tools'].optional, true)
 assert.equal(manifest.peerDependenciesMeta['@deepseek-ai/schemastery'].optional, true)
 

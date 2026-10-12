@@ -29,8 +29,8 @@
 
 ## 环境要求
 
-- DeepSeek Harness `0.1.0-rc.6`
-- Node.js 20+
+- DeepSeek Harness `0.2.0-rc.2`、`0.2.1-alpha.1` 或 `0.2.1-alpha.2`
+- Node.js 22.12+
 - Blender 4.3+；当前实现已面向 Blender 5.x API 适配
 - `blender` 在 `PATH` 中，或在 `cordis.patch.yml` 中配置绝对路径
 
@@ -41,6 +41,10 @@ pnpm setup:analysis
 ```
 
 它只会在插件目录创建被 Git 忽略的 `.venv`，并安装 OpenCV、NumPy、Pillow 和 SciPy。也可以把 `analysisPythonExecutable` 指向已有环境。
+
+## 兼容性验证
+
+逐版本 DSH 兼容矩阵与一次性 Profile 安装、启动、卸载结果见 [v0.2.3 验证报告](docs/compatibility-v0.2.3.md)。报告区分作者验证与 DSH STORE 上架状态；回滚及 macOS 以外的平台尚未验证。
 
 ## 从 npm 安装
 
@@ -56,7 +60,7 @@ npx @deepseek-ai/dsh web
 也可以固定安装 GitHub Release：
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.2
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.3
 ```
 
 ## 从源码开发

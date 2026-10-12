@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.2.3 - 2026-10-12
+
+- Declare exact compatibility with DSH `0.2.0-rc.2`, `0.2.1-alpha.1`, and `0.2.1-alpha.2`, with disposable-Profile install/start/uninstall evidence; rollback remains unverified.
+- Accept the current DSH Tools and Schemastery prerelease peer versions while continuing to reuse the host runtime as optional peers.
+- Align the Node.js requirement with the current DSH CLI (`>=22.12.0`) and update both installation guides.
+- Add a reproducible DSH Profile smoke check covering real tool dispatch, skills, analysis setup, modeling, preview, export/re-import, workspace path guards, and uninstall cleanup.
+
 ## 0.2.2 - 2026-09-16
 
 - Clean up temporary directories and partially written payloads when Blender call preparation fails, including JSON serialization and file write errors (#7, #8).

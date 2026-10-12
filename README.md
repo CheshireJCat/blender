@@ -28,10 +28,14 @@ No Blender add-on or control port is required: each operation launches a local B
 
 ## Requirements
 
-- DeepSeek Harness `0.1.0-rc.6`
-- Node.js 20+
+- DeepSeek Harness `0.2.0-rc.2`, `0.2.1-alpha.1`, or `0.2.1-alpha.2`
+- Node.js 22.12+
 - Blender 4.3+ available as `blender` on `PATH`, or configured with an absolute path
 - Python 3.10+ for the optional reference-analysis helpers
+
+## Compatibility verification
+
+The exact DSH compatibility matrix and disposable-Profile install/start/uninstall results are documented in [the v0.2.3 verification report](docs/compatibility-v0.2.3.md). The report distinguishes author verification from DSH STORE approval. Rollback and platforms other than macOS remain unverified.
 
 ## Install from npm
 
@@ -47,7 +51,7 @@ The setup command creates a private `.venv` inside the installed package and ins
 To install a pinned GitHub release instead:
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.2
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.3
 ```
 
 ## Develop from source
