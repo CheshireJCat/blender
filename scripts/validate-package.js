@@ -42,7 +42,7 @@ assert.equal(manifest.peerDependenciesMeta['@deepseek-ai/dsh-tools'].optional, t
 assert.equal(manifest.peerDependenciesMeta['@deepseek-ai/schemastery'].optional, true)
 
 const skill = readFileSync(join(root, 'skills/create-3d-model/SKILL.md'), 'utf8')
-assert.match(skill, /^---\nname: create-3d-model\n/u)
+assert.match(skill, /^---\r?\nname: create-3d-model\r?\n/u)
 assert.match(skill, /references\/dsh-integration\.md/u)
 assert.doesNotMatch(skill, /references\/codex-integration\.md/u)
 
@@ -59,7 +59,7 @@ const helperScripts = modules.flatMap((module) => {
   if (!existsSync(scripts)) return []
   return readdirSync(scripts)
     .filter((file) => file.endsWith('.py'))
-    .map((file) => join('references/modules', module, 'scripts', file))
+    .map((file) => `references/modules/${module}/scripts/${file}`)
 })
 assert.equal(helperScripts.length, 26, `expected 26 helper scripts, found ${helperScripts.length}`)
 assert.equal(HELPER_CATALOG.length, 26, `expected 26 catalog helpers, found ${HELPER_CATALOG.length}`)
