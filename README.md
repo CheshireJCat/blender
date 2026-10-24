@@ -51,7 +51,7 @@ The setup command creates a private `.venv` inside the installed package and ins
 To install a pinned GitHub release instead:
 
 ```bash
-npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.3
+npx @deepseek-ai/dsh plugin --profile web add github:CheshireJCat/blender#v0.2.4
 ```
 
 ## Develop from source

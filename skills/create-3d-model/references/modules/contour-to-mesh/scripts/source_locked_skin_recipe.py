@@ -106,13 +106,16 @@ def main():
     ap.add_argument('--epsilon-frac', type=float, default=0.0018)
     args=ap.parse_args()
     p=Path(args.image)
-    img=cv2.imread(str(p), cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(p), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise RuntimeError(f'cannot read {p}')
     m=foreground_mask(img, args.mode, args.hue_min, args.hue_max, args.sat_min, args.value_min)
     comp=largest_component(m, args.close_iters, args.dilate_iters, args.open_ksize)
     Path(args.mask_out).parent.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(args.mask_out, comp)
+    encoded_ok, encoded_image = cv2.imencode(Path(args.mask_out).suffix, comp)
+    if not encoded_ok:
+        raise OSError(f"Could not encode image: {args.mask_out}")
+    encoded_image.tofile(args.mask_out)
     rec=make_recipe(p, comp, args.name, args.world_width, args.samples, args.epsilon_frac)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(rec, indent=2), encoding='utf-8')

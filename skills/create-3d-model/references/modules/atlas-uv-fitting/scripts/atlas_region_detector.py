@@ -18,7 +18,7 @@ def mask(img, mode):
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--image', required=True); ap.add_argument('--out', required=True); ap.add_argument('--mode', default='auto', choices=['auto','alpha','bright_on_dark','dark_on_bright']); ap.add_argument('--min-area', type=int, default=64); ap.add_argument('--pad', type=int, default=2); args=ap.parse_args()
-    p=Path(args.image); img=cv2.imread(str(p), cv2.IMREAD_UNCHANGED)
+    p=Path(args.image); img=cv2.imdecode(np.fromfile(str(p), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(f'cannot read {p}')
     h,w=img.shape[:2]; m=mask(img,args.mode)
     contours,_=cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

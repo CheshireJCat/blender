@@ -11,7 +11,7 @@ except Exception:
     ssim = None
 
 def mask(path, mode):
-    img=cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(f'cannot read {path}')
     if img.ndim==3 and img.shape[2]==4 and mode in ('auto','alpha'):
         m=(img[:,:,3] > 8).astype('uint8')*255
@@ -72,6 +72,9 @@ def main():
         overlay[ren]=[255,255,0]      # yellow render
         overlay[np.logical_and(ref,ren)]=[0,255,0]
         overlay[np.logical_xor(ref,ren)]=[255,0,0]
-        cv2.imwrite(args.overlay, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+        encoded_ok, encoded_image = cv2.imencode(Path(args.overlay).suffix, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+        if not encoded_ok:
+            raise OSError(f"Could not encode image: {args.overlay}")
+        encoded_image.tofile(args.overlay)
     print(json.dumps(report, indent=2))
 if __name__ == '__main__': main()

@@ -13,7 +13,7 @@ import numpy as np
 
 
 def read_image(path: Path):
-    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise RuntimeError(f"cannot read {path}")
     if img.ndim == 2:
@@ -104,7 +104,10 @@ def main():
         if part.get('min_area') and int((m > 0).sum()) < int(part['min_area']):
             m = base
         mask_path = out / f"{name}_mask.png"
-        cv2.imwrite(str(mask_path), m)
+        encoded_ok, encoded_image = cv2.imencode(Path(str(mask_path)).suffix, m)
+        if not encoded_ok:
+            raise OSError(f"Could not encode image: {str(mask_path)}")
+        encoded_image.tofile(str(mask_path))
         parts.append({
             'name': name,
             'class': part.get('class', 'structural'),

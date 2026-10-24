@@ -4,7 +4,7 @@ import argparse,json,cv2,numpy as np
 from pathlib import Path
 
 def mask(path):
-    img=cv2.imread(str(path),cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(path)
     if img.ndim==3 and img.shape[2]==4: m=img[:,:,3]>8
     else:

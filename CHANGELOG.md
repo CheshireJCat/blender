@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.2.4 - 2026-10-24
+
+- Fix Unicode workspace/input/output paths in all OpenCV-based helpers by reading and writing image bytes through NumPy instead of OpenCV's filename APIs (#12).
+- Run Python helpers in UTF-8 mode and explicitly encode their stdout/stderr as UTF-8 so Windows locale settings do not corrupt diagnostics.
+- Exercise Chinese, accented, and emoji workspace paths, template analysis, mask output/re-read, and existing helper families; add Windows and Linux CI coverage.
+
 ## 0.2.3 - 2026-10-12
 
 - Declare exact compatibility with DSH `0.2.0-rc.2`, `0.2.1-alpha.1`, and `0.2.1-alpha.2`, with disposable-Profile install/start/uninstall evidence; rollback remains unverified.

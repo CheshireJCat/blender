@@ -11,7 +11,7 @@ import numpy as np
 
 
 def load_mask(path, mode, canny1=50, canny2=150, dilate=1):
-    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise FileNotFoundError(path)
     if img.ndim == 3 and img.shape[2] == 4:
@@ -103,7 +103,10 @@ def main():
     }
     Path(args.out).write_text(json.dumps(out, indent=2))
     if args.mask_out:
-        cv2.imwrite(args.mask_out, mask)
+        encoded_ok, encoded_image = cv2.imencode(Path(args.mask_out).suffix, mask)
+        if not encoded_ok:
+            raise OSError(f"Could not encode image: {args.mask_out}")
+        encoded_image.tofile(args.mask_out)
     print(json.dumps({'out': args.out, 'components': len(recs)}, indent=2))
 
 if __name__ == '__main__':

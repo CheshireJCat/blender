@@ -11,7 +11,7 @@ except Exception:
 
 
 def mask(path, threshold=20):
-    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise FileNotFoundError(path)
     if img.ndim == 3 and img.shape[2] == 4:

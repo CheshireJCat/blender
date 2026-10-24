@@ -31,7 +31,7 @@ class WireframeAnalyzer:
         """
         self.image_path = Path(image_path)
         self.verbose = verbose
-        self.original = cv2.imread(str(image_path))
+        self.original = cv2.imdecode(np.fromfile(str(image_path), dtype=np.uint8), cv2.IMREAD_COLOR)
 
         if self.original is None:
             raise FileNotFoundError(f"Cannot load {image_path}")

@@ -8,7 +8,7 @@ import numpy as np
 VIEWS=('front','side','back','top')
 
 def load_mask(path: Path, mode: str):
-    img=cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(f'cannot read {path}')
     rgb=cv2.cvtColor(img[:,:,:3], cv2.COLOR_BGR2RGB) if img.ndim==3 else cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     hsv=cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
@@ -79,7 +79,10 @@ def compare(ref_path, ren_path, out_overlay, ref_mode='wire_black', ren_mode='br
     overlay[np.logical_and(ref,ren)]=[0,255,0]
     overlay[np.logical_xor(ref,ren)]=[255,0,0]
     Path(out_overlay).parent.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(out_overlay), cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+    encoded_ok, encoded_image = cv2.imencode(Path(str(out_overlay)).suffix, cv2.cvtColor(overlay, cv2.COLOR_RGB2BGR))
+    if not encoded_ok:
+        raise OSError(f"Could not encode image: {str(out_overlay)}")
+    encoded_image.tofile(str(out_overlay))
     return rep
 
 def main():

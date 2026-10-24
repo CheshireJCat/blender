@@ -1,6 +1,6 @@
 {
   "name": "dsh-blender",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "DeepSeek Harness Blender production, reconstruction, validation, and export plugin",
   "repository": {
     "type": "git",

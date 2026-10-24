@@ -1,0 +1,29 @@
+name: Helper Unicode paths
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  helpers:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --ignore-scripts --no-package-lock
+      - run: python -m pip install -r requirements-analysis.txt
+      - run: node scripts/validate-package.js
+      - run: node --test test/helpers.integration.test.js
+        env:
+          RUN_HELPER_TESTS: '1'
+          ANALYSIS_PYTHON: python

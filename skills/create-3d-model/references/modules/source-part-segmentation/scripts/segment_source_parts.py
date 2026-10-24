@@ -5,7 +5,7 @@ from pathlib import Path
 import cv2, numpy as np
 
 def load_mask(path, mode):
-    img=cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(f'cannot read {path}')
     rgb=cv2.cvtColor(img[:,:,:3], cv2.COLOR_BGR2RGB) if img.ndim==3 else cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     hsv=cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
@@ -56,7 +56,10 @@ def main():
         ys,xs=np.where(cm>0)
         bbox=[int(xs.min()),int(ys.min()),int(xs.max()-xs.min()+1),int(ys.max()-ys.min()+1)]
         mp=out/f'part_{len(comps):03d}_mask.png'
-        cv2.imwrite(str(mp),cm)
+        encoded_ok, encoded_image = cv2.imencode(Path(str(mp)).suffix, cm)
+        if not encoded_ok:
+            raise OSError(f"Could not encode image: {str(mp)}")
+        encoded_image.tofile(str(mp))
         comps.append({'id':len(comps),'label':int(idx),'area':area,'bbox_px':bbox,'mask':str(mp)})
     report={'schema':'source_part_segmentation.v1','image':args.image,'mode':args.mode,'watershed':args.watershed,'components':comps}
     Path(out/'segmentation_report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')

@@ -374,12 +374,13 @@ async function runHelper(config, exec, helper, rawArguments, inputBlend, allowOv
     ]
   } else {
     command = analysisPythonExecutable(config)
-    args = [script, ...commandArguments]
+    args = ['-X', 'utf8', script, ...commandArguments]
   }
   const result = await runProcess(command, args, {
     signal: exec.signal,
     timeoutMs: config.helperTimeoutMs,
     maxOutputChars: config.maxOutputChars,
+    env: helper.runtime === 'python' ? { ...process.env, PYTHONIOENCODING: 'utf-8' } : undefined,
   })
   if (result.code !== 0) {
     throw new Error(`${helper.name} failed with exit ${result.code}\n${clip(`${result.stdout}\n${result.stderr}`.trim(), config.maxOutputChars)}`)
@@ -417,10 +418,10 @@ function normalizeLosslessJson(value) {
   return value
 }
 
-function runProcess(command, args, { signal, timeoutMs, maxOutputChars }) {
+function runProcess(command, args, { signal, timeoutMs, maxOutputChars, env }) {
   if (signal?.aborted) return Promise.reject(signal.reason ?? new Error('Blender call aborted'))
   return new Promise((resolvePromise, rejectPromise) => {
-    const child = spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true })
+    const child = spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true, env })
     let stdout = ''
     let stderr = ''
     let settled = false
@@ -449,11 +450,13 @@ function runProcess(command, args, { signal, timeoutMs, maxOutputChars }) {
     }
     signal?.addEventListener('abort', onAbort, { once: true })
 
+    child.stdout.setEncoding('utf8')
+    child.stderr.setEncoding('utf8')
     child.stdout.on('data', (chunk) => {
-      stdout = clip(stdout + chunk.toString('utf8'), maxOutputChars)
+      stdout = clip(stdout + chunk, maxOutputChars)
     })
     child.stderr.on('data', (chunk) => {
-      stderr = clip(stderr + chunk.toString('utf8'), maxOutputChars)
+      stderr = clip(stderr + chunk, maxOutputChars)
     })
     child.once('error', (error) => {
       if (settled) return

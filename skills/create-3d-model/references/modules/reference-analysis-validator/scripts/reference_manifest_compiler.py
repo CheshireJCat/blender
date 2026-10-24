@@ -33,7 +33,7 @@ def classify(path: Path) -> str:
     return 'unknown'
 
 def load_mask(path: Path, mode: str) -> tuple[np.ndarray, dict]:
-    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    img = cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None:
         raise RuntimeError(f'cannot read {path}')
     meta = {'width': int(img.shape[1]), 'height': int(img.shape[0]), 'channels': int(img.shape[2]) if img.ndim == 3 else 1}

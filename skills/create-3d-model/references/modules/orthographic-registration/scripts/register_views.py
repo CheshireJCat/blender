@@ -10,7 +10,7 @@ def role(p):
         if r.search(p.name): return k
     return 'unknown'
 def mask(p):
-    img=cv2.imread(str(p), cv2.IMREAD_UNCHANGED)
+    img=cv2.imdecode(np.fromfile(str(p), dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     if img is None: raise RuntimeError(f'cannot read {p}')
     if img.ndim==3 and img.shape[2]==4:
         m=img[:,:,3]>8

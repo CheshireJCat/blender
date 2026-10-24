@@ -5,7 +5,7 @@ from pathlib import Path
 import cv2, numpy as np
 
 def read(path, size=None):
-    img=cv2.imread(str(path), cv2.IMREAD_COLOR)
+    img=cv2.imdecode(np.fromfile(str(path), dtype=np.uint8), cv2.IMREAD_COLOR)
     if img is None: raise RuntimeError(f'cannot read {path}')
     if size: img=cv2.resize(img,size)
     return img
@@ -74,6 +74,9 @@ def main():
         ov[pb]=[255,255,0]
         ov[np.logical_and(rb,pb)]=[0,255,0]
         ov[np.logical_xor(rb,pb)]=[255,0,0]
-        cv2.imwrite(args.overlay, cv2.cvtColor(ov,cv2.COLOR_RGB2BGR))
+        encoded_ok, encoded_image = cv2.imencode(Path(args.overlay).suffix, cv2.cvtColor(ov,cv2.COLOR_RGB2BGR))
+        if not encoded_ok:
+            raise OSError(f"Could not encode image: {args.overlay}")
+        encoded_image.tofile(args.overlay)
     print(json.dumps({'object_iou':report['object_iou_bright_mask'],'accent_hue_iou':report.get('accent_hue_iou'),'diagnosis':report.get('diagnosis')},indent=2))
 if __name__=='__main__': main()
